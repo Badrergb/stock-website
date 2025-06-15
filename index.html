@@ -21,7 +21,7 @@
       box-shadow: 0 4px 10px rgba(0,0,0,0.1);
       text-align: center;
       width: 100%;
-      max-width: 400px;
+      max-width: 500px;
     }
 
     h2, h3, label, button {
@@ -48,31 +48,11 @@
       background-color: #45a049;
     }
 
-    a {
-      color: #007bff;
-      text-decoration: none;
-    }
-
     .nav {
       display: flex;
       flex-direction: column;
       gap: 10px;
       margin-top: 20px;
-    }
-
-    table {
-      border-collapse: collapse;
-      width: 100%;
-    }
-
-    th, td {
-      border: 1px solid #ddd;
-      padding: 8px;
-      text-align: center;
-    }
-
-    th {
-      background-color: #f2f2f2;
     }
   </style>
 </head>
@@ -91,27 +71,19 @@
     <div class="nav">
       <button onclick="showViewStock()">📊 பங்கு பார்வை</button>
       <button onclick="showUpdateForm()">✍️ பங்கு புதுப்பிப்பு</button>
+      <button onclick="showHistory()">📜 இதிகாசம்</button>
     </div>
     <div id="content-area"></div>
   </div>
 
   <script>
-    const scriptURL = 'YOUR_GOOGLE_SCRIPT_URL_HERE';
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbwAozNF9Y-AVjcbrGyKkbIDBQguIAjZ3BrVEGp5RmcWhAVzuY_ME07vo-RTEKESUR5B/exec';
 
     function login() {
       const u = document.getElementById('username').value;
       const p = document.getElementById('password').value;
-      const stored = localStorage.getItem('user');
 
-      if (!stored) {
-        alert('❌ கணக்கு இல்லை. முதலில் பதிவு செய்யவும்.');
-        return;
-      }
-
-      const user = JSON.parse(stored);
-
-      if (u === user.username && p === user.password) {
-        localStorage.setItem("loggedIn", "true");
+      if (u === 'admin' && p === 'admin') {
         document.getElementById('login-container').style.display = 'none';
         document.getElementById('dashboard').style.display = 'block';
         document.getElementById('user-name').textContent = u;
@@ -121,10 +93,10 @@
     }
 
     function showViewStock() {
-      fetch(scriptURL)
+      fetch(scriptURL + '?action=viewStock')
         .then(res => res.json())
         .then(data => {
-          let html = '<table><tr>';
+          let html = '<table border="1" style="width:100%; text-align:center; border-collapse: collapse;"><tr>';
           Object.keys(data[0]).forEach(key => html += `<th>${key}</th>`);
           html += '</tr>';
           data.forEach(row => {
@@ -142,10 +114,16 @@
         <h3>பங்கு புதுப்பிப்பு</h3>
         <label>தரம்:</label>
         <select id="design">
-          <option value="தரம்1">தரம்1</option>
-          <option value="தரம்2">தரம்2</option>
+          <option value="100S">100S</option>
+          <option value="60S">60S</option>
         </select>
         <label>ரகம்:</label>
+        <select id="count">
+          <option value="வெள்ளை">வெள்ளை</option>
+          <option value="நீலம்">நீலம்</option>
+          <option value="இளஞ்சிவப்பு">இளஞ்சிவப்பு</option>
+        </select>
+        <label>கெஜம்:</label>
         <select id="yard">
           <option value="6 கெஜம்">6 கெஜம்</option>
           <option value="7 கெஜம்">7 கெஜம்</option>
@@ -164,6 +142,7 @@
     function updateStock(action) {
       const data = {
         design: document.getElementById('design').value,
+        count: document.getElementById('count').value,
         yard: document.getElementById('yard').value,
         quantity: parseInt(document.getElementById('quantity').value),
         action: action
@@ -175,6 +154,24 @@
       })
       .then(res => res.text())
       .then(msg => alert(msg));
+    }
+
+    function showHistory() {
+      fetch(scriptURL + '?action=viewHistory')
+        .then(res => res.json())
+        .then(data => {
+          let html = '<h3>📜 பங்கு வரலாறு</h3>';
+          html += '<table border="1" style="width:100%; text-align:center; border-collapse: collapse;"><tr>';
+          Object.keys(data[0]).forEach(key => html += `<th>${key}</th>`);
+          html += '</tr>';
+          data.forEach(row => {
+            html += '<tr>';
+            Object.values(row).forEach(cell => html += `<td>${cell}</td>`);
+            html += '</tr>';
+          });
+          html += '</table>';
+          document.getElementById('content-area').innerHTML = html;
+        });
     }
   </script>
 </body>
