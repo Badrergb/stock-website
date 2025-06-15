@@ -11,14 +11,14 @@
       align-items: center;
       height: 100vh;
       margin: 0;
-      background-color: #f0f0f0;
+      background-color: #f9f9f9;
     }
 
     .container {
       background: white;
       padding: 30px;
       border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      box-shadow: 0 0 15px rgba(0,0,0,0.15);
       text-align: center;
       max-width: 360px;
       width: 100%;
@@ -37,46 +37,69 @@
     button {
       background-color: #4CAF50;
       color: white;
+      font-weight: bold;
       cursor: pointer;
     }
 
     button:hover {
-      background-color: #45a049;
+      background-color: #388e3c;
     }
 
     a {
       color: #007bff;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .error {
+      color: red;
+      font-size: 14px;
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <h2>🔐 பங்கு மேலாண்மை முறைமை</h2>
+    <h2>🔐 பங்கு மேலாண்மை</h2>
     <p>பயனர் நுழைவு</p>
-    <input type="text" id="username" placeholder="பயனர் பெயர் (email)">
-    <input type="password" id="password" placeholder="கடவுச்சொல்">
+    
+    <input type="text" id="username" placeholder="📧 பயனர் பெயர் (email)">
+    <input type="password" id="password" placeholder="🔑 கடவுச்சொல்">
     <button onclick="login()">நுழை</button>
-    <p>இன்னும் கணக்கு இல்லையா? <a href="signup.html">புதிய கணக்கு</a></p>
+
+    <p>⏩ புதிய பயனர்? <a href="signup.html">இங்கே பதிவு செய்யவும்</a></p>
+    <p class="error" id="error"></p>
   </div>
 
   <script>
     function login() {
+      const u = document.getElementById('username').value.trim();
+      const p = document.getElementById('password').value.trim();
+      const error = document.getElementById('error');
+
+      if (!u || !p) {
+        error.textContent = "❗ பயனர் பெயர் மற்றும் கடவுச்சொல் தேவை";
+        return;
+      }
+
       const storedUser = localStorage.getItem("user");
       if (!storedUser) {
-        alert("❌ கணக்கு இல்லை. முதலில் பதிவு செய்யவும்.");
+        error.textContent = "❌ கணக்கு இல்லை. முதலில் பதிவு செய்யவும்.";
         return;
       }
 
       const { username, password } = JSON.parse(storedUser);
-      const u = document.getElementById('username').value.trim();
-      const p = document.getElementById('password').value;
 
       if (u === username && p === password) {
         localStorage.setItem("loggedIn", "true");
+        localStorage.setItem("username", u);
+        error.textContent = "";
         alert("✅ நுழைவு வெற்றி!");
-        window.location.href = "home.html"; // replace with your dashboard
+        window.location.href = "home.html";
       } else {
-        alert("❌ தவறான பயனர் பெயர் அல்லது கடவுச்சொல்");
+        error.textContent = "❌ தவறான பயனர் பெயர் அல்லது கடவுச்சொல்";
       }
     }
   </script>
