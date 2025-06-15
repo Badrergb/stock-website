@@ -63,7 +63,7 @@
     <input type="text" id="username" placeholder="பயனர் பெயர்">
     <input type="password" id="password" placeholder="கடவுச்சோல்">
     <button onclick="login()">நுழை</button>
-    <p>இன்னும் கணக்கு இல்லையா? <a href="signup.html">புதிய கணக்கு</a></p>
+    <p>இன்னும் கணக்கு இல்லையா? <a href="#">(புதிய கணக்கு)</a></p>
   </div>
 
   <div class="container" id="dashboard" style="display:none;">
@@ -71,120 +71,72 @@
     <div class="nav">
       <button onclick="showViewStock()">📊 பங்கு பார்வை</button>
       <button onclick="showUpdateForm()">✍️ பங்கு புதுப்பிப்பு</button>
-      <button onclick="showHistory()">⏲️ இதிஹாஸ்டரி</button>
+      <button onclick="alert('Work in progress')">📋 இதிஹாஸ்டரி</button>
     </div>
     <div id="content-area"></div>
   </div>
 
   <script>
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbwAozNF9Y-AVjcbrGyKkbIDBQguIAjZ3BrVEGp5RmcWhAVzuY_ME07vo-RTEKESUR5B/exec';
-
     function login() {
       const u = document.getElementById('username').value;
       const p = document.getElementById('password').value;
-      const storedUser = localStorage.getItem("user");
-
-      if (storedUser) {
-        const data = JSON.parse(storedUser);
-        if (u === data.username && p === data.password) {
-          document.getElementById('login-container').style.display = 'none';
-          document.getElementById('dashboard').style.display = 'block';
-          document.getElementById('user-name').textContent = u;
-          return;
-        }
-      }
 
       if (u === 'admin' && p === 'admin') {
         document.getElementById('login-container').style.display = 'none';
         document.getElementById('dashboard').style.display = 'block';
         document.getElementById('user-name').textContent = u;
       } else {
-        alert('❌ தவறான் பயனர் பெயர் அல்லது கடவுச்சோல்');
+        alert('❌ தவறான பயனர் பெயர் அல்லது கடவுச்சோல்');
       }
     }
 
     function showViewStock() {
-      fetch(scriptURL)
-        .then(res => res.json())
-        .then(data => {
-          if (!Array.isArray(data)) return alert('No stock data.');
+      fetch('stock-data.csv')
+        .then(res => res.text())
+        .then(csv => {
+          const lines = csv.trim().split('\n');
+          const headers = lines[0].split(',');
+          const rows = lines.slice(1).map(line => line.split(','));
           let html = '<table border="1" style="width:100%; text-align:center; border-collapse: collapse;"><tr>';
-          Object.keys(data[0]).forEach(key => html += `<th>${key}</th>`);
+          headers.forEach(h => html += `<th>${h}</th>`);
           html += '</tr>';
-          data.forEach(row => {
+          rows.forEach(row => {
             html += '<tr>';
-            Object.values(row).forEach(cell => html += `<td>${cell}</td>`);
+            row.forEach(cell => html += `<td>${cell}</td>`);
             html += '</tr>';
           });
           html += '</table>';
           document.getElementById('content-area').innerHTML = html;
-        })
-        .catch(() => alert("Failed to load stock data"));
+        });
     }
 
     function showUpdateForm() {
       const html = `
         <h3>பங்கு புதுப்பிப்பு</h3>
-        <label>தரம்:</label>
-        <select id="design">
+        <label>தரம் (Type):</label>
+        <select id="type">
           <option value="100S">100S</option>
           <option value="60S">60S</option>
         </select>
-        <label>ரகம்:</label>
-        <select id="yard">
-          <option value="ரகம்1">ரகம்1</option>
-          <option value="ரகம்2">ரகம்2</option>
+        <label>ரகம் (Design):</label>
+        <select id="design">
+          <option value="Design A">Design A</option>
+          <option value="Design B">Design B</option>
         </select>
         <label>கெஜம்:</label>
-        <select id="gauge">
+        <select id="yard">
           <option value="6 கெஜம்">6 கெஜம்</option>
           <option value="7 கெஜம்">7 கெஜம்</option>
           <option value="8 கெஜம்">8 கெஜம்</option>
           <option value="9 கெஜம்">9 கெஜம்</option>
           <option value="10 கெஜம்">10 கெஜம்</option>
         </select>
-        <label>அளவு:</label>
+        <label>அளவு (Quantity):</label>
         <input type="number" id="quantity" placeholder="எண்ணிக்கை">
-        <button onclick="updateStock('purchase')">🚲 வாங்கு</button>
-        <button onclick="updateStock('sell')">📤 விற்றல்</button>
+        <button onclick="alert('Buy logic not connected')">🛂 வாங்கு</button>
+        <button onclick="alert('Sell logic not connected')">📤 விற்றல்</button>
       `;
       document.getElementById('content-area').innerHTML = html;
-    }
-
-    function updateStock(action) {
-      const data = {
-        design: document.getElementById('design').value,
-        yard: document.getElementById('yard').value,
-        gauge: document.getElementById('gauge').value,
-        quantity: parseInt(document.getElementById('quantity').value),
-        action: action
-      };
-      fetch(scriptURL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data)
-      })
-      .then(res => res.text())
-      .then(msg => alert(msg))
-      .catch(() => alert("Failed to update stock"));
-    }
-
-    function showHistory() {
-      fetch(scriptURL + '?sheet=StockHistory')
-        .then(res => res.json())
-        .then(data => {
-          let html = '<h3>இதிஹாஸ்டரி</h3><table border="1" style="width:100%; text-align:center; border-collapse: collapse;"><tr>';
-          Object.keys(data[0]).forEach(key => html += `<th>${key}</th>`);
-          html += '</tr>';
-          data.forEach(row => {
-            html += '<tr>';
-            Object.values(row).forEach(cell => html += `<td>${cell}</td>`);
-            html += '</tr>';
-          });
-          html += '</table>';
-          document.getElementById('content-area').innerHTML = html;
-        })
-        .catch(() => alert("Failed to load history"));
     }
   </script>
 </body>
