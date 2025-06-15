@@ -2,71 +2,76 @@
 <html lang="ta">
 <head>
   <meta charset="UTF-8">
-  <title>பதிவு செய்யவும்</title>
+  <title>புதிய கணக்கு</title>
   <style>
     body {
       font-family: 'Noto Sans Tamil', Arial, sans-serif;
-      margin: 0;
-      height: 100vh;
       display: flex;
       justify-content: center;
       align-items: center;
-      background-color: #f0f2f5;
+      height: 100vh;
+      margin: 0;
+      background-color: #f0f0f0;
     }
+
     .container {
       background: white;
       padding: 30px;
       border-radius: 10px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
       text-align: center;
-      width: 300px;
-    }
-    input, button {
-      padding: 10px;
+      max-width: 360px;
       width: 100%;
-      margin: 10px 0;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-      font-size: 16px;
     }
+
+    input, button {
+      padding: 12px;
+      margin: 10px 0;
+      width: 100%;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      box-sizing: border-box;
+    }
+
     button {
-      background-color: #007bff;
+      background-color: #4CAF50;
       color: white;
       cursor: pointer;
     }
+
+    button:hover {
+      background-color: #45a049;
+    }
+
     a {
-      text-decoration: none;
-      color: #4CAF50;
+      color: #007bff;
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <h2>👤 புதிய பயனர் பதிவு</h2>
-    <input type="email" id="username" placeholder="மின்னஞ்சல் (Username)" required>
-    <input type="password" id="password" placeholder="கடவுச்சொல்" required>
-    <button onclick="signup()">பதிவு செய்யவும்</button>
-    <p>ஏற்கனவே கணக்கு உள்ளதா? <a href="login.html">நுழையவும்</a></p>
+    <h2>📝 புதிய பயனர் பதிவு</h2>
+    <input type="text" id="username" placeholder="பயனர் பெயர் (email)">
+    <input type="password" id="password" placeholder="கடவுச்சொல்">
+    <button onclick="signup()">பதிவு செய்</button>
+    <p>ஏற்கனவே கணக்கு உள்ளதா? <a href="index.html">நுழை</a></p>
   </div>
 
   <script>
     function signup() {
-      const username = document.getElementById("username").value.trim();
-      const password = document.getElementById("password").value.trim();
+      const username = document.getElementById('username').value.trim();
+      const password = document.getElementById('password').value;
 
       if (!username || !password) {
-        alert("❌ பயனர் பெயர் மற்றும் கடவுச்சொல் கட்டாயம்.");
+        alert("உங்கள் பயனர் பெயர் மற்றும் கடவுச்சொல் உள்ளிடவும்.");
         return;
       }
 
-      const user = {
-        username: username,
-        password: password
-      };
-
+      const user = { username, password };
       localStorage.setItem("user", JSON.stringify(user));
-      alert("✅ பதிவு வெற்றிகரமாக முடிந்தது! நுழையவும்.");
-      window.location.href = "login.html";
+      alert("✅ கணக்கு வெற்றிகரமாக உருவாக்கப்பட்டது!");
+      window.location.href = "index.html";
     }
   </script>
 </body>
