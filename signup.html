@@ -1,18 +1,31 @@
 <!DOCTYPE html>
-<html>
+<html lang="ta">
 <head>
-  <title>Sign Up</title>
+  <meta charset="UTF-8">
+  <title>புதிய கணக்கு</title>
   <style>
-    body { font-family: Arial; max-width: 400px; margin: auto; padding: 20px; }
-    input, button { padding: 10px; width: 100%; margin: 10px 0; }
+    body {
+      font-family: 'Noto Sans Tamil', Arial, sans-serif;
+      max-width: 400px;
+      margin: auto;
+      padding: 20px;
+      background-color: #f2f2f2;
+    }
+    input, button {
+      padding: 10px;
+      width: 100%;
+      margin: 10px 0;
+      font-size: 16px;
+    }
+    a { color: blue; text-decoration: none; }
   </style>
 </head>
 <body>
-  <h2>🆕 Sign Up</h2>
-  <input type="text" id="username" placeholder="Choose a Username" />
-  <input type="password" id="password" placeholder="Choose a Password" />
-  <button onclick="signup()">Sign Up</button>
-  <p>Already have an account? <a href="login.html">Login</a></p>
+  <h2>🆕 புதிய கணக்கு</h2>
+  <input type="text" id="username" placeholder="பயனர் பெயரை தேர்வு செய்யவும்" />
+  <input type="password" id="password" placeholder="கடவுச்சொல்லை தேர்வு செய்யவும்" />
+  <button onclick="signup()">பதிவு செய்யவும்</button>
+  <p>ஏற்கனவே கணக்கு உள்ளதா? <a href="login.html">உள்நுழைக</a></p>
 
   <script>
     function signup() {
@@ -20,13 +33,13 @@
       const p = document.getElementById('password').value;
 
       if (!u || !p) {
-        alert("❌ Fill all fields");
+        alert("❌ அனைத்து இடங்களையும் பூர்த்தி செய்யவும்");
         return;
       }
 
       const user = { username: u, password: p };
       localStorage.setItem("user", JSON.stringify(user));
-      alert("✅ Signed up! You can now login.");
+      alert("✅ நீங்கள் வெற்றிகரமாக பதிவு செய்துள்ளீர்கள்! இப்போது உள்நுழையலாம்.");
       window.location.href = "login.html";
     }
   </script>
