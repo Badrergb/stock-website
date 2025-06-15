@@ -2,35 +2,69 @@
 <html lang="ta">
 <head>
   <meta charset="UTF-8">
-  <title>உள்நுழைவு</title>
+  <title>பங்கு மேலாண்மை நுழைவு</title>
   <style>
     body {
       font-family: 'Noto Sans Tamil', Arial, sans-serif;
-      max-width: 400px;
-      margin: auto;
-      padding: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
       background-color: #f2f2f2;
     }
+
+    .container {
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      text-align: center;
+      width: 100%;
+      max-width: 360px;
+    }
+
     input, button {
-      padding: 10px;
+      padding: 12px;
       width: 100%;
       margin: 10px 0;
       font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      box-sizing: border-box;
     }
-    a { color: blue; text-decoration: none; }
+
+    button {
+      background-color: #4CAF50;
+      color: white;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+
+    a {
+      color: #007bff;
+      text-decoration: none;
+    }
   </style>
 </head>
 <body>
-  <h2>🔐 உள்நுழைவு</h2>
-  <input type="text" id="username" placeholder="பயனர் பெயர்" />
-  <input type="password" id="password" placeholder="கடவுச்சொல்" />
-  <button onclick="login()">உள்நுழை</button>
-  <p>கணக்கு இல்லை? <a href="signup.html">புதிய கணக்கு உருவாக்கவும்</a></p>
+  <div class="container">
+    <h2>🔐 பங்கு மேலாண்மை முறைமை</h2>
+    <p>பயனர் நுழைவு</p>
+    <input type="text" id="username" placeholder="பயனர் பெயர்" />
+    <input type="password" id="password" placeholder="கடவுச்சொல்" />
+    <button onclick="login()">நுழை</button>
+    <p>இன்னும் கணக்கு இல்லையா? <a href="signup.html">புதிய கணக்கு</a></p>
+  </div>
 
   <script>
     function login() {
       const user = localStorage.getItem('user');
-      if (!user) return alert("❌ பயனர் இல்லை. தயவுசெய்து கணக்கை உருவாக்கவும்.");
+      if (!user) return alert("❌ கணக்கு இல்லை. முதலில் பதிவு செய்யவும்.");
 
       const data = JSON.parse(user);
       const u = document.getElementById('username').value;
