@@ -2,7 +2,7 @@
 <html lang="ta">
 <head>
   <meta charset="UTF-8">
-  <title>பங்கு மேலாண்மை</title>
+  <title>பங்கு மேலாணமை</title>
   <style>
     body {
       font-family: 'Noto Sans Tamil', Arial, sans-serif;
@@ -21,7 +21,7 @@
       box-shadow: 0 4px 10px rgba(0,0,0,0.1);
       text-align: center;
       width: 100%;
-      max-width: 500px;
+      max-width: 400px;
     }
 
     h2, h3, label, button {
@@ -58,10 +58,10 @@
 </head>
 <body>
   <div class="container" id="login-container">
-    <h2>🔐 பங்கு மேலாண்மை முறைமை</h2>
+    <h2>🔐 பங்கு மேலாணமை முறைமை</h2>
     <p>பயனர் நுழைவு</p>
     <input type="text" id="username" placeholder="பயனர் பெயர்">
-    <input type="password" id="password" placeholder="கடவுச்சொல்">
+    <input type="password" id="password" placeholder="கடவுச்சோல்">
     <button onclick="login()">நுழை</button>
     <p>இன்னும் கணக்கு இல்லையா? <a href="signup.html">புதிய கணக்கு</a></p>
   </div>
@@ -71,7 +71,7 @@
     <div class="nav">
       <button onclick="showViewStock()">📊 பங்கு பார்வை</button>
       <button onclick="showUpdateForm()">✍️ பங்கு புதுப்பிப்பு</button>
-      <button onclick="showHistory()">📜 இதிகாசம்</button>
+      <button onclick="showHistory()">⏲️ இதிஹாஸ்டரி</button>
     </div>
     <div id="content-area"></div>
   </div>
@@ -82,20 +82,32 @@
     function login() {
       const u = document.getElementById('username').value;
       const p = document.getElementById('password').value;
+      const storedUser = localStorage.getItem("user");
+
+      if (storedUser) {
+        const data = JSON.parse(storedUser);
+        if (u === data.username && p === data.password) {
+          document.getElementById('login-container').style.display = 'none';
+          document.getElementById('dashboard').style.display = 'block';
+          document.getElementById('user-name').textContent = u;
+          return;
+        }
+      }
 
       if (u === 'admin' && p === 'admin') {
         document.getElementById('login-container').style.display = 'none';
         document.getElementById('dashboard').style.display = 'block';
         document.getElementById('user-name').textContent = u;
       } else {
-        alert('❌ தவறான பயனர் பெயர் அல்லது கடவுச்சொல்');
+        alert('❌ தவறான் பயனர் பெயர் அல்லது கடவுச்சோல்');
       }
     }
 
     function showViewStock() {
-      fetch(scriptURL + '?action=viewStock')
+      fetch(scriptURL)
         .then(res => res.json())
         .then(data => {
+          if (!Array.isArray(data)) return alert('No stock data.');
           let html = '<table border="1" style="width:100%; text-align:center; border-collapse: collapse;"><tr>';
           Object.keys(data[0]).forEach(key => html += `<th>${key}</th>`);
           html += '</tr>';
@@ -106,7 +118,8 @@
           });
           html += '</table>';
           document.getElementById('content-area').innerHTML = html;
-        });
+        })
+        .catch(() => alert("Failed to load stock data"));
     }
 
     function showUpdateForm() {
@@ -118,13 +131,12 @@
           <option value="60S">60S</option>
         </select>
         <label>ரகம்:</label>
-        <select id="count">
-          <option value="வெள்ளை">வெள்ளை</option>
-          <option value="நீலம்">நீலம்</option>
-          <option value="இளஞ்சிவப்பு">இளஞ்சிவப்பு</option>
+        <select id="yard">
+          <option value="ரகம்1">ரகம்1</option>
+          <option value="ரகம்2">ரகம்2</option>
         </select>
         <label>கெஜம்:</label>
-        <select id="yard">
+        <select id="gauge">
           <option value="6 கெஜம்">6 கெஜம்</option>
           <option value="7 கெஜம்">7 கெஜம்</option>
           <option value="8 கெஜம்">8 கெஜம்</option>
@@ -133,7 +145,7 @@
         </select>
         <label>அளவு:</label>
         <input type="number" id="quantity" placeholder="எண்ணிக்கை">
-        <button onclick="updateStock('purchase')">🛒 வாங்கு</button>
+        <button onclick="updateStock('purchase')">🚲 வாங்கு</button>
         <button onclick="updateStock('sell')">📤 விற்றல்</button>
       `;
       document.getElementById('content-area').innerHTML = html;
@@ -142,8 +154,8 @@
     function updateStock(action) {
       const data = {
         design: document.getElementById('design').value,
-        count: document.getElementById('count').value,
         yard: document.getElementById('yard').value,
+        gauge: document.getElementById('gauge').value,
         quantity: parseInt(document.getElementById('quantity').value),
         action: action
       };
@@ -153,15 +165,15 @@
         body: JSON.stringify(data)
       })
       .then(res => res.text())
-      .then(msg => alert(msg));
+      .then(msg => alert(msg))
+      .catch(() => alert("Failed to update stock"));
     }
 
     function showHistory() {
-      fetch(scriptURL + '?action=viewHistory')
+      fetch(scriptURL + '?sheet=StockHistory')
         .then(res => res.json())
         .then(data => {
-          let html = '<h3>📜 பங்கு வரலாறு</h3>';
-          html += '<table border="1" style="width:100%; text-align:center; border-collapse: collapse;"><tr>';
+          let html = '<h3>இதிஹாஸ்டரி</h3><table border="1" style="width:100%; text-align:center; border-collapse: collapse;"><tr>';
           Object.keys(data[0]).forEach(key => html += `<th>${key}</th>`);
           html += '</tr>';
           data.forEach(row => {
@@ -171,7 +183,8 @@
           });
           html += '</table>';
           document.getElementById('content-area').innerHTML = html;
-        });
+        })
+        .catch(() => alert("Failed to load history"));
     }
   </script>
 </body>
