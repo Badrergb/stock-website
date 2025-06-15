@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="ta">
+<head>
+  <meta charset="UTF-8">
+  <title>பங்கு பட்டியல் (Stock List)</title>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
+    import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-database.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyARqMZuRIIIll7yXIC6yKQaRpHdO9vAZm4",
+      authDomain: "pangu-stock-manager.firebaseapp.com",
+      databaseURL: "https://pangu-stock-manager-default-rtdb.firebaseio.com",
+      projectId: "pangu-stock-manager",
+      storageBucket: "pangu-stock-manager.appspot.com",
+      messagingSenderId: "480460883375",
+      appId: "1:480460883375:web:eed86845204cdf8f64db5a"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+
+    window.onload = () => {
+      const table = document.getElementById("stockTable");
+
+      get(ref(db, "stock")).then(snapshot => {
+        if (snapshot.exists()) {
+          const data = snapshot.val();
+          for (let key in data) {
+            const row = data[key];
+            const tr = document.createElement("tr");
+            tr.innerHTML = `
+              <td>${row["வ .எண்"]}</td>
+              <td>${row["தரம்"]}</td>
+              <td>${row["ரகம்"]}</td>
+              <td>${row["6 கெஜம்"]}</td>
+              <td>${row["7 கெஜம்"]}</td>
+              <td>${row["8 கெஜம்"]}</td>
+              <td>${row["9 கெஜம்"]}</td>
+              <td>${row["10 கெஜம்"]}</td>
+              <td>${row["குறைந்தபட்ச பங்கு நிலை"]}</td>
+            `;
+            table.appendChild(tr);
+          }
+        }
+      });
+    };
+  </script>
+</head>
+<body>
+  <h2>📋 பங்கு பட்டியல்</h2>
+  <table border="1">
+    <thead>
+      <tr>
+        <th>வ .எண்</th>
+        <th>தரம்</th>
+        <th>ரகம்</th>
+        <th>6 கெஜம்</th>
+        <th>7 கெஜம்</th>
+        <th>8 கெஜம்</th>
+        <th>9 கெஜம்</th>
+        <th>10 கெஜம்</th>
+        <th>குறைந்தபட்ச பங்கு நிலை</th>
+      </tr>
+    </thead>
+    <tbody id="stockTable"></tbody>
+  </table>
+</body>
+</html>
