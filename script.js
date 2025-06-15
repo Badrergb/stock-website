@@ -1,32 +1,29 @@
-const form = document.getElementById('stockForm');
-const message = document.getElementById('message');
+function login() {
+  const user = document.getElementById("username").value;
+  const pass = document.getElementById("password").value;
 
-// Replace this URL with your deployed Google Script URL
-const scriptURL = "https://script.google.com/macros/s/PASTE-YOUR-DEPLOYMENT-URL-HERE/exec";
+  // Simple login validation (not secure for production)
+  if (user === "admin" && pass === "1234") {
+    document.getElementById("loginSection").style.display = "none";
+    document.getElementById("stockSection").style.display = "block";
+  } else {
+    alert("Invalid username or password");
+  }
+}
 
-form.addEventListener('submit', (e) => {
-  e.preventDefault();
+function handleStock(action) {
+  const count = parseInt(document.getElementById("countInput").value);
+  const design = document.getElementById("designDropdown").value;
+  const yards = document.getElementById("yardsDropdown").value;
 
-  const data = {
-    count: parseInt(document.getElementById('count').value),
-    design: document.getElementById('design').value,
-    yard: document.getElementById('yard').value,
-    mode: document.getElementById('mode').value
-  };
+  if (isNaN(count) || count <= 0) {
+    alert("Enter a valid count");
+    return;
+  }
 
-  fetch(scriptURL, {
-    method: 'POST',
-    body: JSON.stringify(data),
-    headers: { 'Content-Type': 'application/json' }
-  })
-  .then(res => res.json())
-  .then(res => {
-    if (res.success) message.innerText = "Stock updated successfully!";
-    else if (res.alert) message.innerText = "⚠️ " + res.alert;
-    else message.innerText = "❌ " + res.error;
-  })
-  .catch(err => {
-    message.innerText = "Something went wrong!";
-    console.error(err);
-  });
-});
+  const message = `${action === "purchase" ? "Added" : "Removed"} ${count} of ${design} - ${yards} Yards`;
+  alert(message);
+
+  // Optionally send data to Google Sheets via Apps Script
+  // sendToGoogleSheets(count, design, yards, action);
+}
