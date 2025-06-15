@@ -1,31 +1,42 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Stock Manager</title>
+  <meta charset="UTF-8">
+  <title>Stock Management Login</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <h2>Stock Manager</h2>
-  <form id="stockForm">
-    <input type="number" id="count" placeholder="Enter COUNT" required><br>
-    <select id="design">
-      <option value="Design A">Design A</option>
-      <option value="Design B">Design B</option>
-    </select><br>
-    <select id="yard">
-      <option value="6">6 YARDS</option>
-      <option value="7">7 YARDS</option>
-      <option value="8">8 YARDS</option>
-      <option value="9">9 YARDS</option>
-      <option value="10">10 YARDS</option>
-    </select><br>
-    <select id="mode">
-      <option value="purchase">Purchase</option>
-      <option value="sell">Sell</option>
-    </select><br>
-    <button type="submit">Update Stock</button>
-  </form>
-  <p id="message"></p>
+  <div id="loginSection">
+    <h2>Login</h2>
+    <input type="text" id="username" placeholder="Username"><br>
+    <input type="password" id="password" placeholder="Password"><br>
+    <button onclick="login()">Login</button>
+  </div>
+
+  <div id="stockSection" style="display:none;">
+    <h2>Stock Entry</h2>
+    <label>Count:</label>
+    <input type="number" id="countInput"><br><br>
+
+    <label>Design:</label>
+    <select id="designDropdown">
+      <option>Saree</option>
+      <option>Kurti</option>
+      <option>Silk</option>
+    </select><br><br>
+
+    <label>Yards:</label>
+    <select id="yardsDropdown">
+      <option>6</option>
+      <option>7</option>
+      <option>8</option>
+      <option>9</option>
+      <option>10</option>
+    </select><br><br>
+
+    <button onclick="handleStock('purchase')">Purchase</button>
+    <button onclick="handleStock('sale')">Sale</button>
+  </div>
 
   <script src="script.js"></script>
 </body>
