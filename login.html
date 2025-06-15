@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Login</title>
+  <style>
+    body { font-family: Arial; max-width: 400px; margin: auto; padding: 20px; }
+    input, button { padding: 10px; width: 100%; margin: 10px 0; }
+  </style>
+</head>
+<body>
+  <h2>🔐 Login</h2>
+  <input type="text" id="username" placeholder="Username" />
+  <input type="password" id="password" placeholder="Password" />
+  <button onclick="login()">Login</button>
+  <p>Don't have an account? <a href="signup.html">Sign up</a></p>
+
+  <script>
+    function login() {
+      const user = localStorage.getItem('user');
+      if (!user) return alert("❌ No user found. Please sign up first.");
+
+      const data = JSON.parse(user);
+      const u = document.getElementById('username').value;
+      const p = document.getElementById('password').value;
+
+      if (u === data.username && p === data.password) {
+        localStorage.setItem("loggedIn", "true");
+        window.location.href = "index.html";
+      } else {
+        alert("❌ Invalid credentials");
+      }
+    }
+  </script>
+</body>
+</html>
