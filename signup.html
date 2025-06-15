@@ -2,76 +2,66 @@
 <html lang="ta">
 <head>
   <meta charset="UTF-8">
-  <title>புதிய கணக்கு</title>
+  <title>பதிவு செய்யவும்</title>
   <style>
     body {
       font-family: 'Noto Sans Tamil', Arial, sans-serif;
-      background-color: #f2f2f2;
+      margin: 0;
+      height: 100vh;
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 100vh;
-      margin: 0;
+      background-color: #f0f2f5;
     }
-
     .container {
       background: white;
       padding: 30px;
       border-radius: 10px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-      width: 100%;
-      max-width: 360px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
       text-align: center;
+      width: 300px;
     }
-
     input, button {
+      padding: 10px;
       width: 100%;
-      padding: 12px;
       margin: 10px 0;
       border: 1px solid #ccc;
-      border-radius: 6px;
+      border-radius: 5px;
       font-size: 16px;
     }
-
     button {
       background-color: #007bff;
       color: white;
       cursor: pointer;
     }
-
-    button:hover {
-      background-color: #0056b3;
-    }
-
     a {
       text-decoration: none;
-      color: #28a745;
+      color: #4CAF50;
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <h2>📝 புதிய கணக்கு</h2>
-    <input type="text" id="newUsername" placeholder="புதிய பயனர் பெயர்" />
-    <input type="password" id="newPassword" placeholder="புதிய கடவுச்சொல்" />
+    <h2>📝 புதிய பயனர் பதிவு</h2>
+    <input type="text" id="newUsername" placeholder="புதிய பயனர் பெயர்">
+    <input type="password" id="newPassword" placeholder="கடவுச்சொல்">
     <button onclick="signup()">பதிவு செய்</button>
-    <p><a href="login.html">ஏற்கனவே கணக்கு உண்டு? நுழையவும்</a></p>
+    <p>ஏற்கனவே ஒரு கணக்கு உண்டா? <a href="login.html">நுழைய</a></p>
   </div>
 
   <script>
     function signup() {
-      const username = document.getElementById('newUsername').value.trim();
-      const password = document.getElementById('newPassword').value.trim();
+      const username = document.getElementById("newUsername").value.trim();
+      const password = document.getElementById("newPassword").value.trim();
 
       if (!username || !password) {
-        alert("❌ பயனர் பெயர் மற்றும் கடவுச்சொல் கட்டாயம் தேவை");
+        alert("❌ அனைத்து புலங்களையும் பூர்த்தி செய்யவும்.");
         return;
       }
 
-      const userData = { username, password };
-      localStorage.setItem('user', JSON.stringify(userData));
-
-      alert("✅ கணக்கு வெற்றிகரமாக உருவாக்கப்பட்டது. இப்போது நுழையலாம்.");
+      const user = { username, password };
+      localStorage.setItem("user", JSON.stringify(user));
+      alert("✅ பதிவு வெற்றிகரமாக முடிந்தது! நுழையலாம்.");
       window.location.href = "login.html";
     }
   </script>
