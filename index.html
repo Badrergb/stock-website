@@ -48,11 +48,31 @@
       background-color: #45a049;
     }
 
+    a {
+      color: #007bff;
+      text-decoration: none;
+    }
+
     .nav {
       display: flex;
       flex-direction: column;
       gap: 10px;
       margin-top: 20px;
+    }
+
+    table {
+      border-collapse: collapse;
+      width: 100%;
+    }
+
+    th, td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: center;
+    }
+
+    th {
+      background-color: #f2f2f2;
     }
   </style>
 </head>
@@ -81,8 +101,17 @@
     function login() {
       const u = document.getElementById('username').value;
       const p = document.getElementById('password').value;
+      const stored = localStorage.getItem('user');
 
-      if (u === 'admin' && p === 'admin') {
+      if (!stored) {
+        alert('❌ கணக்கு இல்லை. முதலில் பதிவு செய்யவும்.');
+        return;
+      }
+
+      const user = JSON.parse(stored);
+
+      if (u === user.username && p === user.password) {
+        localStorage.setItem("loggedIn", "true");
         document.getElementById('login-container').style.display = 'none';
         document.getElementById('dashboard').style.display = 'block';
         document.getElementById('user-name').textContent = u;
@@ -95,7 +124,7 @@
       fetch(scriptURL)
         .then(res => res.json())
         .then(data => {
-          let html = '<table border="1" style="width:100%; text-align:center; border-collapse: collapse;"><tr>';
+          let html = '<table><tr>';
           Object.keys(data[0]).forEach(key => html += `<th>${key}</th>`);
           html += '</tr>';
           data.forEach(row => {
