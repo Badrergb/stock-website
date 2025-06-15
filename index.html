@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Stock Manager</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h2>Stock Manager</h2>
+  <form id="stockForm">
+    <input type="number" id="count" placeholder="Enter COUNT" required><br>
+    <select id="design">
+      <option value="Design A">Design A</option>
+      <option value="Design B">Design B</option>
+    </select><br>
+    <select id="yard">
+      <option value="6">6 YARDS</option>
+      <option value="7">7 YARDS</option>
+      <option value="8">8 YARDS</option>
+      <option value="9">9 YARDS</option>
+      <option value="10">10 YARDS</option>
+    </select><br>
+    <select id="mode">
+      <option value="purchase">Purchase</option>
+      <option value="sell">Sell</option>
+    </select><br>
+    <button type="submit">Update Stock</button>
+  </form>
+  <p id="message"></p>
+
+  <script src="script.js"></script>
+</body>
+</html>
