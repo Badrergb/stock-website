@@ -2,90 +2,71 @@
 <html lang="ta">
 <head>
   <meta charset="UTF-8">
-  <title>பங்கு மேலாண்மை - நுழைவு</title>
+  <title>பயனர் நுழைவு</title>
   <style>
     body {
       font-family: 'Noto Sans Tamil', Arial, sans-serif;
-      background-color: #f2f2f2;
+      margin: 0;
       height: 100vh;
       display: flex;
       justify-content: center;
       align-items: center;
-      margin: 0;
+      background-color: #f0f2f5;
     }
-
     .container {
-      background: #fff;
+      background: white;
       padding: 30px;
       border-radius: 10px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-      width: 100%;
-      max-width: 360px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
       text-align: center;
+      width: 300px;
     }
-
     input, button {
+      padding: 10px;
       width: 100%;
-      padding: 12px;
       margin: 10px 0;
       border: 1px solid #ccc;
-      border-radius: 6px;
+      border-radius: 5px;
       font-size: 16px;
     }
-
     button {
       background-color: #4CAF50;
       color: white;
       cursor: pointer;
     }
-
-    button:hover {
-      background-color: #45a049;
-    }
-
     a {
-      color: #007bff;
       text-decoration: none;
-    }
-
-    a:hover {
-      text-decoration: underline;
-    }
-
-    .note {
-      font-size: 14px;
+      color: #007bff;
     }
   </style>
 </head>
 <body>
-
   <div class="container">
     <h2>🔐 பங்கு மேலாண்மை</h2>
-    <p>பயனர் நுழைவு</p>
-
-    <input type="text" id="username" placeholder="பயனர் பெயர்" />
-    <input type="password" id="password" placeholder="கடவுச்சொல்" />
+    <input type="text" id="username" placeholder="பயனர் பெயர்">
+    <input type="password" id="password" placeholder="கடவுச்சொல்">
     <button onclick="login()">நுழை</button>
-
-    <p class="note">இன்னும் கணக்கு இல்லையா? <a href="signup.html">புதிய கணக்கு</a></p>
+    <p>புதிய பயனரா? <a href="signup.html">பதிவு செய்யவும்</a></p>
   </div>
 
   <script>
     function login() {
-      const user = localStorage.getItem('user');
-      if (!user) {
+      const enteredUsername = document.getElementById("username").value.trim();
+      const enteredPassword = document.getElementById("password").value.trim();
+      const storedUser = JSON.parse(localStorage.getItem("user"));
+
+      if (!storedUser) {
         alert("❌ கணக்கு இல்லை. முதலில் பதிவு செய்யவும்.");
         return;
       }
 
-      const data = JSON.parse(user);
-      const u = document.getElementById('username').value.trim();
-      const p = document.getElementById('password').value.trim();
-
-      if (u === data.username && p === data.password) {
-        localStorage.setItem("loggedIn", "true");
+      if (
+        storedUser.username === enteredUsername &&
+        storedUser.password === enteredPassword
+      ) {
         alert("✅ நுழைவு வெற்றிகரமாக முடிந்தது");
-        window.location.href = "index.html";
+        localStorage.setItem("loggedIn", "true");
+        window.location.href = "index.html"; // Redirect after successful login
       } else {
         alert("❌ தவறான பயனர் பெயர் அல்லது கடவுச்சொல்");
       }
