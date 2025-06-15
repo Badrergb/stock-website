@@ -1,23 +1,36 @@
 <!DOCTYPE html>
-<html>
+<html lang="ta">
 <head>
-  <title>Login</title>
+  <meta charset="UTF-8">
+  <title>உள்நுழைவு</title>
   <style>
-    body { font-family: Arial; max-width: 400px; margin: auto; padding: 20px; }
-    input, button { padding: 10px; width: 100%; margin: 10px 0; }
+    body {
+      font-family: 'Noto Sans Tamil', Arial, sans-serif;
+      max-width: 400px;
+      margin: auto;
+      padding: 20px;
+      background-color: #f2f2f2;
+    }
+    input, button {
+      padding: 10px;
+      width: 100%;
+      margin: 10px 0;
+      font-size: 16px;
+    }
+    a { color: blue; text-decoration: none; }
   </style>
 </head>
 <body>
-  <h2>🔐 Login</h2>
-  <input type="text" id="username" placeholder="Username" />
-  <input type="password" id="password" placeholder="Password" />
-  <button onclick="login()">Login</button>
-  <p>Don't have an account? <a href="signup.html">Sign up</a></p>
+  <h2>🔐 உள்நுழைவு</h2>
+  <input type="text" id="username" placeholder="பயனர் பெயர்" />
+  <input type="password" id="password" placeholder="கடவுச்சொல்" />
+  <button onclick="login()">உள்நுழை</button>
+  <p>கணக்கு இல்லை? <a href="signup.html">புதிய கணக்கு உருவாக்கவும்</a></p>
 
   <script>
     function login() {
       const user = localStorage.getItem('user');
-      if (!user) return alert("❌ No user found. Please sign up first.");
+      if (!user) return alert("❌ பயனர் இல்லை. தயவுசெய்து கணக்கை உருவாக்கவும்.");
 
       const data = JSON.parse(user);
       const u = document.getElementById('username').value;
@@ -27,7 +40,7 @@
         localStorage.setItem("loggedIn", "true");
         window.location.href = "index.html";
       } else {
-        alert("❌ Invalid credentials");
+        alert("❌ தவறான பயனர் பெயர் அல்லது கடவுச்சொல்");
       }
     }
   </script>
