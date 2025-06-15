@@ -2,7 +2,7 @@
 <html lang="ta">
 <head>
   <meta charset="UTF-8">
-  <title>பங்கு மேலாணமை</title>
+  <title>பங்கு மேலாண்மை நுழைவு</title>
   <style>
     body {
       font-family: 'Noto Sans Tamil', Arial, sans-serif;
@@ -11,27 +11,23 @@
       align-items: center;
       height: 100vh;
       margin: 0;
-      background-color: #f2f2f2;
+      background-color: #f0f0f0;
     }
 
     .container {
       background: white;
       padding: 30px;
       border-radius: 10px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
       text-align: center;
+      max-width: 360px;
       width: 100%;
-      max-width: 400px;
     }
 
-    h2, h3, label, button {
-      color: #333;
-    }
-
-    input, select, button {
-      padding: 10px;
-      width: 100%;
+    input, button {
+      padding: 12px;
       margin: 10px 0;
+      width: 100%;
       font-size: 16px;
       border: 1px solid #ccc;
       border-radius: 6px;
@@ -48,95 +44,40 @@
       background-color: #45a049;
     }
 
-    .nav {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      margin-top: 20px;
+    a {
+      color: #007bff;
     }
   </style>
 </head>
 <body>
-  <div class="container" id="login-container">
-    <h2>🔐 பங்கு மேலாணமை முறைமை</h2>
+  <div class="container">
+    <h2>🔐 பங்கு மேலாண்மை முறைமை</h2>
     <p>பயனர் நுழைவு</p>
-    <input type="text" id="username" placeholder="பயனர் பெயர்">
-    <input type="password" id="password" placeholder="கடவுச்சோல்">
+    <input type="text" id="username" placeholder="பயனர் பெயர் (email)">
+    <input type="password" id="password" placeholder="கடவுச்சொல்">
     <button onclick="login()">நுழை</button>
-    <p>இன்னும் கணக்கு இல்லையா? <a href="#">(புதிய கணக்கு)</a></p>
-  </div>
-
-  <div class="container" id="dashboard" style="display:none;">
-    <h3>வணக்கம், <span id="user-name"></span>!</h3>
-    <div class="nav">
-      <button onclick="showViewStock()">📊 பங்கு பார்வை</button>
-      <button onclick="showUpdateForm()">✍️ பங்கு புதுப்பிப்பு</button>
-      <button onclick="alert('Work in progress')">📋 இதிஹாஸ்டரி</button>
-    </div>
-    <div id="content-area"></div>
+    <p>இன்னும் கணக்கு இல்லையா? <a href="signup.html">புதிய கணக்கு</a></p>
   </div>
 
   <script>
     function login() {
-      const u = document.getElementById('username').value;
+      const storedUser = localStorage.getItem("user");
+      if (!storedUser) {
+        alert("❌ கணக்கு இல்லை. முதலில் பதிவு செய்யவும்.");
+        return;
+      }
+
+      const { username, password } = JSON.parse(storedUser);
+      const u = document.getElementById('username').value.trim();
       const p = document.getElementById('password').value;
 
-      if (u === 'admin' && p === 'admin') {
-        document.getElementById('login-container').style.display = 'none';
-        document.getElementById('dashboard').style.display = 'block';
-        document.getElementById('user-name').textContent = u;
+      if (u === username && p === password) {
+        localStorage.setItem("loggedIn", "true");
+        alert("✅ நுழைவு வெற்றி!");
+        window.location.href = "home.html"; // replace with your dashboard
       } else {
-        alert('❌ தவறான பயனர் பெயர் அல்லது கடவுச்சோல்');
+        alert("❌ தவறான பயனர் பெயர் அல்லது கடவுச்சொல்");
       }
-    }
-
-    function showViewStock() {
-      fetch('stock-data.csv')
-        .then(res => res.text())
-        .then(csv => {
-          const lines = csv.trim().split('\n');
-          const headers = lines[0].split(',');
-          const rows = lines.slice(1).map(line => line.split(','));
-          let html = '<table border="1" style="width:100%; text-align:center; border-collapse: collapse;"><tr>';
-          headers.forEach(h => html += `<th>${h}</th>`);
-          html += '</tr>';
-          rows.forEach(row => {
-            html += '<tr>';
-            row.forEach(cell => html += `<td>${cell}</td>`);
-            html += '</tr>';
-          });
-          html += '</table>';
-          document.getElementById('content-area').innerHTML = html;
-        });
-    }
-
-    function showUpdateForm() {
-      const html = `
-        <h3>பங்கு புதுப்பிப்பு</h3>
-        <label>தரம் (Type):</label>
-        <select id="type">
-          <option value="100S">100S</option>
-          <option value="60S">60S</option>
-        </select>
-        <label>ரகம் (Design):</label>
-        <select id="design">
-          <option value="Design A">Design A</option>
-          <option value="Design B">Design B</option>
-        </select>
-        <label>கெஜம்:</label>
-        <select id="yard">
-          <option value="6 கெஜம்">6 கெஜம்</option>
-          <option value="7 கெஜம்">7 கெஜம்</option>
-          <option value="8 கெஜம்">8 கெஜம்</option>
-          <option value="9 கெஜம்">9 கெஜம்</option>
-          <option value="10 கெஜம்">10 கெஜம்</option>
-        </select>
-        <label>அளவு (Quantity):</label>
-        <input type="number" id="quantity" placeholder="எண்ணிக்கை">
-        <button onclick="alert('Buy logic not connected')">🛂 வாங்கு</button>
-        <button onclick="alert('Sell logic not connected')">📤 விற்றல்</button>
-      `;
-      document.getElementById('content-area').innerHTML = html;
     }
   </script>
 </body>
