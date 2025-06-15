@@ -4,6 +4,8 @@
   <meta charset="UTF-8">
   <title>பங்கு மேலாண்மை நுழைவு</title>
   <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Tamil&display=swap');
+
     body {
       font-family: 'Noto Sans Tamil', Arial, sans-serif;
       display: flex;
@@ -49,6 +51,10 @@
       color: #007bff;
       text-decoration: none;
     }
+
+    a:hover {
+      text-decoration: underline;
+    }
   </style>
 </head>
 <body>
@@ -64,14 +70,18 @@
   <script>
     function login() {
       const user = localStorage.getItem('user');
-      if (!user) return alert("❌ கணக்கு இல்லை. முதலில் பதிவு செய்யவும்.");
+      if (!user) {
+        alert("❌ கணக்கு இல்லை. முதலில் பதிவு செய்யவும்.");
+        return;
+      }
 
       const data = JSON.parse(user);
-      const u = document.getElementById('username').value;
+      const u = document.getElementById('username').value.trim();
       const p = document.getElementById('password').value;
 
       if (u === data.username && p === data.password) {
         localStorage.setItem("loggedIn", "true");
+        alert("✅ நுழைவு வெற்றிகரமாக முடிந்தது!");
         window.location.href = "index.html";
       } else {
         alert("❌ தவறான பயனர் பெயர் அல்லது கடவுச்சொல்");
