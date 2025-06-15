@@ -1,29 +1,47 @@
-function login() {
-  const user = document.getElementById("username").value;
-  const pass = document.getElementById("password").value;
+const scriptURL = "https://script.google.com/macros/s/AKfycby3j570uLHPOqLTf1UOG2r9QrNYEOZrek2jClaZ6BRjmQGT41GLxEzda7qeikK1zEk1/exec";
 
-  // Simple login validation (not secure for production)
-  if (user === "admin" && pass === "1234") {
-    document.getElementById("loginSection").style.display = "none";
-    document.getElementById("stockSection").style.display = "block";
-  } else {
-    alert("Invalid username or password");
-  }
-}
+window.onload = () => {
+  fetch(`${scriptURL}?action=getStockOptions`)
+    .then(res => res.json())
+    .then(data => {
+      const designSel = document.getElementById("designs");
+      const yardSel = document.getElementById("yards");
 
-function handleStock(action) {
-  const count = parseInt(document.getElementById("countInput").value);
-  const design = document.getElementById("designDropdown").value;
-  const yards = document.getElementById("yardsDropdown").value;
+      designSel.innerHTML = "";
+      data.designs.forEach(d => {
+        const opt = document.createElement("option");
+        opt.value = opt.text = d;
+        designSel.appendChild(opt);
+      });
 
-  if (isNaN(count) || count <= 0) {
-    alert("Enter a valid count");
+      yardSel.innerHTML = "";
+      data.yards.forEach(y => {
+        const opt = document.createElement("option");
+        opt.value = opt.text = y;
+        yardSel.appendChild(opt);
+      });
+    });
+};
+
+function updateStock(action) {
+  const count = parseInt(document.getElementById("count").value);
+  const design = document.getElementById("designs").value;
+  const yards = document.getElementById("yards").value;
+  const result = document.getElementById("result");
+
+  if (!count || !design || !yards) {
+    result.innerText = "❌ Please fill in all fields.";
     return;
   }
 
-  const message = `${action === "purchase" ? "Added" : "Removed"} ${count} of ${design} - ${yards} Yards`;
-  alert(message);
+  fetch(`${scriptURL}?action=updateStock&count=${count}&design=${design}&yards=${yards}&actionType=${action}`)
+    .then(res => res.text())
+    .then(msg => {
+      result.innerText = msg;
+    });
+}
 
-  // Optionally send data to Google Sheets via Apps Script
-  // sendToGoogleSheets(count, design, yards, action);
+function logout() {
+  localStorage.removeItem("loggedIn");
+  window.location.href = "login.html";
 }
