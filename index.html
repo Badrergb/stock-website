@@ -2,70 +2,79 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>Stock Management</title>
+  <title>பங்கு மேலாண்மை</title>
   <style>
     body { font-family: Arial; padding: 20px; background: #f2f2f2; }
-    h2 { color: #333; }
+    h2, h3 { color: #333; }
     button, select, input { margin: 5px; padding: 10px; }
-    #stockTable { margin-top: 20px; border-collapse: collapse; width: 100%; }
-    #stockTable th, #stockTable td { border: 1px solid #999; padding: 8px; text-align: center; }
-    #loginSection, #mainSection { display: none; }
+    table { margin-top: 20px; border-collapse: collapse; width: 100%; }
+    th, td { border: 1px solid #999; padding: 8px; text-align: center; }
+    #mainSection, #viewSection, #updateSection, #historySection { display: none; }
   </style>
 </head>
 <body>
-  <h2>Stock Management System</h2>
+  <h2>பங்கு மேலாண்மை முறைமை</h2>
 
   <div id="loginSection">
-    <h3>Login</h3>
-    <input type="text" id="username" placeholder="Enter username"><br>
-    <input type="password" id="password" placeholder="Enter password"><br>
-    <button onclick="login()">Login</button>
+    <h3>பயனர் நுழைவு</h3>
+    <input type="text" id="username" placeholder="பயனர் பெயர்"><br>
+    <input type="password" id="password" placeholder="கடவுச்சொல்"><br>
+    <button onclick="login()">நுழை</button>
   </div>
 
   <div id="mainSection">
-    <button onclick="showViewStock()">View Stock</button>
-    <button onclick="showUpdateStock()">Update Stock</button>
+    <p>வணக்கம், <strong id="user-name"></strong></p>
+    <button onclick="showViewStock()">பங்கு பார்வை</button>
+    <button onclick="showUpdateStock()">பங்கு புதுப்பிப்பு</button>
+    <button onclick="showHistory()">பதிவு வரலாறு</button>
 
-    <div id="viewSection" style="display:none">
-      <h3>Stock Data</h3>
+    <div id="viewSection">
+      <h3>பங்குத் தகவல்</h3>
       <table id="stockTable"></table>
     </div>
 
-    <div id="updateSection" style="display:none">
-      <h3>Update Stock</h3>
-      <label>COUNT:</label><input type="text" id="count"><br>
-      <label>DESIGN:</label><input type="text" id="design"><br>
-      <label>YARD:</label>
+    <div id="updateSection">
+      <h3>பங்கு புதுப்பிப்பு</h3>
+      <label>வ .எண்:</label><input type="text" id="count"><br>
+      <label>தரம்:</label><input type="text" id="design"><br>
+      <label>கெஜம்:</label>
       <select id="yard">
-        <option>6 YARDS</option><option>7 YARDS</option><option>8 YARDS</option><option>9 YARDS</option><option>10 YARDS</option>
+        <option>6 கெஜம்</option><option>7 கெஜம்</option>
+        <option>8 கெஜம்</option><option>9 கெஜம்</option>
+        <option>10 கெஜம்</option>
       </select><br>
-      <label>QUANTITY:</label><input type="number" id="quantity"><br>
-      <button onclick="updateStock('purchase')">Purchase</button>
-      <button onclick="updateStock('sell')">Sell</button>
+      <label>அளவு:</label><input type="number" id="quantity"><br>
+      <button onclick="updateStock('purchase')">வாங்கு</button>
+      <button onclick="updateStock('sell')">விற்க</button>
+    </div>
+
+    <div id="historySection">
+      <h3>பங்கு மாற்ற வரலாறு</h3>
+      <table id="historyTable"></table>
     </div>
   </div>
 
   <script>
-    const scriptURL = 'https://script.google.com/macros/s/YOUR_SCRIPT_ID_HERE/exec';
-
-    window.onload = () => {
-      document.getElementById("loginSection").style.display = "block";
-    };
+    const scriptURL = 'https://script.google.com/macros/s/AKfycby3j570uLHPOqLTf1UOG2r9QrNYEOZrek2jClaZ6BRjmQGT41GLxEzda7qeikK1zEk1/exec';
+    let currentUser = "";
 
     function login() {
-      let u = document.getElementById("username").value;
-      let p = document.getElementById("password").value;
-      if (u === "admin" && p === "admin") {
+      const u = document.getElementById("username").value;
+      const p = document.getElementById("password").value;
+      if (u && p) {
+        currentUser = u;
+        document.getElementById("user-name").innerText = u;
         document.getElementById("loginSection").style.display = "none";
         document.getElementById("mainSection").style.display = "block";
       } else {
-        alert("Wrong login!");
+        alert("தவறான நுழைவு விவரங்கள்!");
       }
     }
 
     function showViewStock() {
       document.getElementById("viewSection").style.display = "block";
       document.getElementById("updateSection").style.display = "none";
+      document.getElementById("historySection").style.display = "none";
       fetch(scriptURL)
         .then(res => res.json())
         .then(data => {
@@ -84,23 +93,44 @@
     function showUpdateStock() {
       document.getElementById("viewSection").style.display = "none";
       document.getElementById("updateSection").style.display = "block";
+      document.getElementById("historySection").style.display = "none";
     }
 
-    function updateStock(type) {
-      let data = {
+    function showHistory() {
+      document.getElementById("viewSection").style.display = "none";
+      document.getElementById("updateSection").style.display = "none";
+      document.getElementById("historySection").style.display = "block";
+      fetch(scriptURL + "?sheet=history")
+        .then(res => res.json())
+        .then(data => {
+          let table = '<tr>';
+          for (let key in data[0]) table += `<th>${key}</th>`;
+          table += '</tr>';
+          data.forEach(row => {
+            table += '<tr>';
+            for (let key in row) table += `<td>${row[key]}</td>`;
+            table += '</tr>';
+          });
+          document.getElementById("historyTable").innerHTML = table;
+        });
+    }
+
+    function updateStock(actionType) {
+      const payload = {
         count: document.getElementById("count").value,
         design: document.getElementById("design").value,
         yard: document.getElementById("yard").value,
         quantity: parseInt(document.getElementById("quantity").value),
-        action: type
+        action: actionType,
+        username: currentUser
       };
       fetch(scriptURL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data)
+        body: JSON.stringify(payload)
       })
       .then(res => res.text())
-      .then(resp => alert(resp));
+      .then(msg => alert(msg));
     }
   </script>
 </body>
