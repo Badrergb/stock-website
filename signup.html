@@ -2,44 +2,83 @@
 <html lang="ta">
 <head>
   <meta charset="UTF-8">
-  <title>புதிய கணக்கு</title>
+  <title>புதிய கணக்கு பதிவு</title>
   <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Tamil&display=swap');
+
     body {
       font-family: 'Noto Sans Tamil', Arial, sans-serif;
-      max-width: 400px;
-      margin: auto;
-      padding: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
       background-color: #f2f2f2;
     }
+
+    .container {
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      text-align: center;
+      width: 100%;
+      max-width: 360px;
+    }
+
     input, button {
-      padding: 10px;
+      padding: 12px;
       width: 100%;
       margin: 10px 0;
       font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      box-sizing: border-box;
     }
-    a { color: blue; text-decoration: none; }
+
+    button {
+      background-color: #007bff;
+      color: white;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    a {
+      color: #4CAF50;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
   </style>
 </head>
 <body>
-  <h2>🆕 புதிய கணக்கு</h2>
-  <input type="text" id="username" placeholder="பயனர் பெயரை தேர்வு செய்யவும்" />
-  <input type="password" id="password" placeholder="கடவுச்சொல்லை தேர்வு செய்யவும்" />
-  <button onclick="signup()">பதிவு செய்யவும்</button>
-  <p>ஏற்கனவே கணக்கு உள்ளதா? <a href="login.html">உள்நுழைக</a></p>
+  <div class="container">
+    <h2>📝 புதிய கணக்கு பதிவு</h2>
+    <input type="text" id="username" placeholder="பயனர் பெயர்" />
+    <input type="password" id="password" placeholder="கடவுச்சொல்" />
+    <button onclick="signup()">பதிவு செய்யவும்</button>
+    <p>ஏற்கனவே கணக்கு உள்ளதா? <a href="login.html">நுழையவும்</a></p>
+  </div>
 
   <script>
     function signup() {
-      const u = document.getElementById('username').value;
+      const u = document.getElementById('username').value.trim();
       const p = document.getElementById('password').value;
 
       if (!u || !p) {
-        alert("❌ அனைத்து இடங்களையும் பூர்த்தி செய்யவும்");
+        alert("⚠️ தயவு செய்து பயனர் பெயரும் கடவுச்சொல்லும் உள்ளிடவும்.");
         return;
       }
 
       const user = { username: u, password: p };
       localStorage.setItem("user", JSON.stringify(user));
-      alert("✅ நீங்கள் வெற்றிகரமாக பதிவு செய்துள்ளீர்கள்! இப்போது உள்நுழையலாம்.");
+      alert("✅ பதிவு வெற்றிகரமாக முடிந்தது. இப்போது நுழையலாம்!");
       window.location.href = "login.html";
     }
   </script>
