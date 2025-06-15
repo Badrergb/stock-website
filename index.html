@@ -1,39 +1,107 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8" />
-  <title>Stock Manager</title>
+  <meta charset="UTF-8">
+  <title>Stock Management</title>
   <style>
-    body { font-family: Arial; padding: 20px; max-width: 500px; margin: auto; }
-    select, input, button { margin: 10px 0; padding: 10px; width: 100%; }
-    button { cursor: pointer; }
-    #result { margin-top: 20px; font-weight: bold; }
+    body { font-family: Arial; padding: 20px; background: #f2f2f2; }
+    h2 { color: #333; }
+    button, select, input { margin: 5px; padding: 10px; }
+    #stockTable { margin-top: 20px; border-collapse: collapse; width: 100%; }
+    #stockTable th, #stockTable td { border: 1px solid #999; padding: 8px; text-align: center; }
+    #loginSection, #mainSection { display: none; }
   </style>
 </head>
 <body>
+  <h2>Stock Management System</h2>
+
+  <div id="loginSection">
+    <h3>Login</h3>
+    <input type="text" id="username" placeholder="Enter username"><br>
+    <input type="password" id="password" placeholder="Enter password"><br>
+    <button onclick="login()">Login</button>
+  </div>
+
+  <div id="mainSection">
+    <button onclick="showViewStock()">View Stock</button>
+    <button onclick="showUpdateStock()">Update Stock</button>
+
+    <div id="viewSection" style="display:none">
+      <h3>Stock Data</h3>
+      <table id="stockTable"></table>
+    </div>
+
+    <div id="updateSection" style="display:none">
+      <h3>Update Stock</h3>
+      <label>COUNT:</label><input type="text" id="count"><br>
+      <label>DESIGN:</label><input type="text" id="design"><br>
+      <label>YARD:</label>
+      <select id="yard">
+        <option>6 YARDS</option><option>7 YARDS</option><option>8 YARDS</option><option>9 YARDS</option><option>10 YARDS</option>
+      </select><br>
+      <label>QUANTITY:</label><input type="number" id="quantity"><br>
+      <button onclick="updateStock('purchase')">Purchase</button>
+      <button onclick="updateStock('sell')">Sell</button>
+    </div>
+  </div>
+
   <script>
-    if (localStorage.getItem("loggedIn") !== "true") {
-      window.location.href = "login.html";
+    const scriptURL = 'https://script.google.com/macros/s/YOUR_SCRIPT_ID_HERE/exec';
+
+    window.onload = () => {
+      document.getElementById("loginSection").style.display = "block";
+    };
+
+    function login() {
+      let u = document.getElementById("username").value;
+      let p = document.getElementById("password").value;
+      if (u === "admin" && p === "admin") {
+        document.getElementById("loginSection").style.display = "none";
+        document.getElementById("mainSection").style.display = "block";
+      } else {
+        alert("Wrong login!");
+      }
+    }
+
+    function showViewStock() {
+      document.getElementById("viewSection").style.display = "block";
+      document.getElementById("updateSection").style.display = "none";
+      fetch(scriptURL)
+        .then(res => res.json())
+        .then(data => {
+          let table = '<tr>';
+          for (let key in data[0]) table += `<th>${key}</th>`;
+          table += '</tr>';
+          data.forEach(row => {
+            table += '<tr>';
+            for (let key in row) table += `<td>${row[key]}</td>`;
+            table += '</tr>';
+          });
+          document.getElementById("stockTable").innerHTML = table;
+        });
+    }
+
+    function showUpdateStock() {
+      document.getElementById("viewSection").style.display = "none";
+      document.getElementById("updateSection").style.display = "block";
+    }
+
+    function updateStock(type) {
+      let data = {
+        count: document.getElementById("count").value,
+        design: document.getElementById("design").value,
+        yard: document.getElementById("yard").value,
+        quantity: parseInt(document.getElementById("quantity").value),
+        action: type
+      };
+      fetch(scriptURL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      })
+      .then(res => res.text())
+      .then(resp => alert(resp));
     }
   </script>
-
-  <h2>🧾 Stock Update</h2>
-
-  <label>COUNT:</label>
-  <input type="number" id="count" placeholder="Enter quantity" />
-
-  <label>DESIGN:</label>
-  <select id="designs"><option>Loading...</option></select>
-
-  <label>YARDS:</label>
-  <select id="yards"><option>Loading...</option></select>
-
-  <button onclick="updateStock('purchase')">📦 Purchase</button>
-  <button onclick="updateStock('sale')">🛒 Sale</button>
-
-  <p id="result"></p>
-  <button onclick="logout()">🚪 Logout</button>
-
-  <script src="script.js"></script>
 </body>
 </html>
