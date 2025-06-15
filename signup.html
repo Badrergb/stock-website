@@ -42,26 +42,30 @@
 </head>
 <body>
   <div class="container">
-    <h2>📝 புதிய பயனர் பதிவு</h2>
-    <input type="text" id="newUsername" placeholder="புதிய பயனர் பெயர்">
-    <input type="password" id="newPassword" placeholder="கடவுச்சொல்">
-    <button onclick="signup()">பதிவு செய்</button>
-    <p>ஏற்கனவே ஒரு கணக்கு உண்டா? <a href="login.html">நுழைய</a></p>
+    <h2>👤 புதிய பயனர் பதிவு</h2>
+    <input type="email" id="username" placeholder="மின்னஞ்சல் (Username)" required>
+    <input type="password" id="password" placeholder="கடவுச்சொல்" required>
+    <button onclick="signup()">பதிவு செய்யவும்</button>
+    <p>ஏற்கனவே கணக்கு உள்ளதா? <a href="login.html">நுழையவும்</a></p>
   </div>
 
   <script>
     function signup() {
-      const username = document.getElementById("newUsername").value.trim();
-      const password = document.getElementById("newPassword").value.trim();
+      const username = document.getElementById("username").value.trim();
+      const password = document.getElementById("password").value.trim();
 
       if (!username || !password) {
-        alert("❌ அனைத்து புலங்களையும் பூர்த்தி செய்யவும்.");
+        alert("❌ பயனர் பெயர் மற்றும் கடவுச்சொல் கட்டாயம்.");
         return;
       }
 
-      const user = { username, password };
+      const user = {
+        username: username,
+        password: password
+      };
+
       localStorage.setItem("user", JSON.stringify(user));
-      alert("✅ பதிவு வெற்றிகரமாக முடிந்தது! நுழையலாம்.");
+      alert("✅ பதிவு வெற்றிகரமாக முடிந்தது! நுழையவும்.");
       window.location.href = "login.html";
     }
   </script>
