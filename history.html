@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="ta">
+<head>
+  <meta charset="UTF-8">
+  <title>பங்கு மாற்ற வரலாறு (Stock History)</title>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
+    import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-database.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyARqMZuRIIIll7yXIC6yKQaRpHdO9vAZm4",
+      authDomain: "pangu-stock-manager.firebaseapp.com",
+      databaseURL: "https://pangu-stock-manager-default-rtdb.firebaseio.com",
+      projectId: "pangu-stock-manager",
+      storageBucket: "pangu-stock-manager.appspot.com",
+      messagingSenderId: "480460883375",
+      appId: "1:480460883375:web:eed86845204cdf8f64db5a"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+
+    window.onload = () => {
+      const table = document.getElementById("historyTable");
+
+      get(ref(db, "StockHistory")).then(snapshot => {
+        if (snapshot.exists()) {
+          const data = snapshot.val();
+          const entries = Object.entries(data).sort((a, b) => b[0] - a[0]); // sort latest first
+          for (let [key, entry] of entries) {
+            const tr = document.createElement("tr");
+            tr.innerHTML = `
+              <td>${entry.USERNAME}</td>
+              <td>${entry.COUNT}</td>
+              <td>${entry.DESIGN}</td>
+              <td>${entry.YARD}</td>
+              <td>${entry.QUANTITY}</td>
+              <td>${entry.ACTION}</td>
+              <td>${entry.DATE}</td>
+            `;
+            table.appendChild(tr);
+          }
+        }
+      });
+    };
+  </script>
+</head>
+<body>
+  <h2>📘 பங்கு மாற்ற வரலாறு</h2>
+  <table border="1">
+    <thead>
+      <tr>
+        <th>பயனர்</th>
+        <th>வ .எண்</th>
+        <th>தரம்</th>
+        <th>கெஜம்</th>
+        <th>அளவு</th>
+        <th>வகை</th>
+        <th>தேதி</th>
+      </tr>
+    </thead>
+    <tbody id="historyTable"></tbody>
+  </table>
+</body>
+</html>
