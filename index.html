@@ -1,133 +1,148 @@
 <!DOCTYPE html>
-<html>
+<html lang="ta">
 <head>
   <meta charset="UTF-8">
   <title>பங்கு மேலாண்மை</title>
   <style>
-    body { font-family: Arial; padding: 20px; background: #f2f2f2; }
-    h2, h3 { color: #333; }
-    button, select, input { margin: 5px; padding: 10px; }
-    table { margin-top: 20px; border-collapse: collapse; width: 100%; }
-    th, td { border: 1px solid #999; padding: 8px; text-align: center; }
-    #mainSection, #viewSection, #updateSection, #historySection { display: none; }
+    body {
+      font-family: 'Noto Sans Tamil', Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      background-color: #f2f2f2;
+    }
+
+    .container {
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      text-align: center;
+      width: 100%;
+      max-width: 400px;
+    }
+
+    h2, h3, label, button {
+      color: #333;
+    }
+
+    input, select, button {
+      padding: 10px;
+      width: 100%;
+      margin: 10px 0;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      box-sizing: border-box;
+    }
+
+    button {
+      background-color: #4CAF50;
+      color: white;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+
+    .nav {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 20px;
+    }
   </style>
 </head>
 <body>
-  <h2>பங்கு மேலாண்மை முறைமை</h2>
-
-  <div id="loginSection">
-    <h3>பயனர் நுழைவு</h3>
-    <input type="text" id="username" placeholder="பயனர் பெயர்"><br>
-    <input type="password" id="password" placeholder="கடவுச்சொல்"><br>
+  <div class="container" id="login-container">
+    <h2>🔐 பங்கு மேலாண்மை முறைமை</h2>
+    <p>பயனர் நுழைவு</p>
+    <input type="text" id="username" placeholder="பயனர் பெயர்">
+    <input type="password" id="password" placeholder="கடவுச்சொல்">
     <button onclick="login()">நுழை</button>
+    <p>இன்னும் கணக்கு இல்லையா? <a href="signup.html">புதிய கணக்கு</a></p>
   </div>
 
-  <div id="mainSection">
-    <p>வணக்கம், <strong id="user-name"></strong></p>
-    <button onclick="showViewStock()">பங்கு பார்வை</button>
-    <button onclick="showUpdateStock()">பங்கு புதுப்பிப்பு</button>
-    <button onclick="showHistory()">பதிவு வரலாறு</button>
-
-    <div id="viewSection">
-      <h3>பங்குத் தகவல்</h3>
-      <table id="stockTable"></table>
+  <div class="container" id="dashboard" style="display:none;">
+    <h3>வணக்கம், <span id="user-name"></span>!</h3>
+    <div class="nav">
+      <button onclick="showViewStock()">📊 பங்கு பார்வை</button>
+      <button onclick="showUpdateForm()">✍️ பங்கு புதுப்பிப்பு</button>
     </div>
-
-    <div id="updateSection">
-      <h3>பங்கு புதுப்பிப்பு</h3>
-      <label>வ .எண்:</label><input type="text" id="count"><br>
-      <label>தரம்:</label><input type="text" id="design"><br>
-      <label>கெஜம்:</label>
-      <select id="yard">
-        <option>6 கெஜம்</option><option>7 கெஜம்</option>
-        <option>8 கெஜம்</option><option>9 கெஜம்</option>
-        <option>10 கெஜம்</option>
-      </select><br>
-      <label>அளவு:</label><input type="number" id="quantity"><br>
-      <button onclick="updateStock('purchase')">வாங்கு</button>
-      <button onclick="updateStock('sell')">விற்க</button>
-    </div>
-
-    <div id="historySection">
-      <h3>பங்கு மாற்ற வரலாறு</h3>
-      <table id="historyTable"></table>
-    </div>
+    <div id="content-area"></div>
   </div>
 
   <script>
-    const scriptURL = 'https://script.google.com/macros/s/AKfycby3j570uLHPOqLTf1UOG2r9QrNYEOZrek2jClaZ6BRjmQGT41GLxEzda7qeikK1zEk1/exec';
-    let currentUser = "";
+    const scriptURL = 'YOUR_GOOGLE_SCRIPT_URL_HERE';
 
     function login() {
-      const u = document.getElementById("username").value;
-      const p = document.getElementById("password").value;
-      if (u && p) {
-        currentUser = u;
-        document.getElementById("user-name").innerText = u;
-        document.getElementById("loginSection").style.display = "none";
-        document.getElementById("mainSection").style.display = "block";
+      const u = document.getElementById('username').value;
+      const p = document.getElementById('password').value;
+
+      if (u === 'admin' && p === 'admin') {
+        document.getElementById('login-container').style.display = 'none';
+        document.getElementById('dashboard').style.display = 'block';
+        document.getElementById('user-name').textContent = u;
       } else {
-        alert("தவறான நுழைவு விவரங்கள்!");
+        alert('❌ தவறான பயனர் பெயர் அல்லது கடவுச்சொல்');
       }
     }
 
     function showViewStock() {
-      document.getElementById("viewSection").style.display = "block";
-      document.getElementById("updateSection").style.display = "none";
-      document.getElementById("historySection").style.display = "none";
       fetch(scriptURL)
         .then(res => res.json())
         .then(data => {
-          let table = '<tr>';
-          for (let key in data[0]) table += `<th>${key}</th>`;
-          table += '</tr>';
+          let html = '<table border="1" style="width:100%; text-align:center; border-collapse: collapse;"><tr>';
+          Object.keys(data[0]).forEach(key => html += `<th>${key}</th>`);
+          html += '</tr>';
           data.forEach(row => {
-            table += '<tr>';
-            for (let key in row) table += `<td>${row[key]}</td>`;
-            table += '</tr>';
+            html += '<tr>';
+            Object.values(row).forEach(cell => html += `<td>${cell}</td>`);
+            html += '</tr>';
           });
-          document.getElementById("stockTable").innerHTML = table;
+          html += '</table>';
+          document.getElementById('content-area').innerHTML = html;
         });
     }
 
-    function showUpdateStock() {
-      document.getElementById("viewSection").style.display = "none";
-      document.getElementById("updateSection").style.display = "block";
-      document.getElementById("historySection").style.display = "none";
+    function showUpdateForm() {
+      const html = `
+        <h3>பங்கு புதுப்பிப்பு</h3>
+        <label>தரம்:</label>
+        <select id="design">
+          <option value="தரம்1">தரம்1</option>
+          <option value="தரம்2">தரம்2</option>
+        </select>
+        <label>ரகம்:</label>
+        <select id="yard">
+          <option value="6 கெஜம்">6 கெஜம்</option>
+          <option value="7 கெஜம்">7 கெஜம்</option>
+          <option value="8 கெஜம்">8 கெஜம்</option>
+          <option value="9 கெஜம்">9 கெஜம்</option>
+          <option value="10 கெஜம்">10 கெஜம்</option>
+        </select>
+        <label>அளவு:</label>
+        <input type="number" id="quantity" placeholder="எண்ணிக்கை">
+        <button onclick="updateStock('purchase')">🛒 வாங்கு</button>
+        <button onclick="updateStock('sell')">📤 விற்றல்</button>
+      `;
+      document.getElementById('content-area').innerHTML = html;
     }
 
-    function showHistory() {
-      document.getElementById("viewSection").style.display = "none";
-      document.getElementById("updateSection").style.display = "none";
-      document.getElementById("historySection").style.display = "block";
-      fetch(scriptURL + "?sheet=history")
-        .then(res => res.json())
-        .then(data => {
-          let table = '<tr>';
-          for (let key in data[0]) table += `<th>${key}</th>`;
-          table += '</tr>';
-          data.forEach(row => {
-            table += '<tr>';
-            for (let key in row) table += `<td>${row[key]}</td>`;
-            table += '</tr>';
-          });
-          document.getElementById("historyTable").innerHTML = table;
-        });
-    }
-
-    function updateStock(actionType) {
-      const payload = {
-        count: document.getElementById("count").value,
-        design: document.getElementById("design").value,
-        yard: document.getElementById("yard").value,
-        quantity: parseInt(document.getElementById("quantity").value),
-        action: actionType,
-        username: currentUser
+    function updateStock(action) {
+      const data = {
+        design: document.getElementById('design').value,
+        yard: document.getElementById('yard').value,
+        quantity: parseInt(document.getElementById('quantity').value),
+        action: action
       };
       fetch(scriptURL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
+        body: JSON.stringify(data)
       })
       .then(res => res.text())
       .then(msg => alert(msg));
